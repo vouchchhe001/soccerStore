@@ -7,7 +7,7 @@ class MongoDatabase {
     if (_db != null) return _db!;
 
     // Replace with your actual MongoDB connection string
-    _db = await Db.create('mongodb://localhost:27017/soccer_store');
+    _db = await Db.create('mongodb://localhost:27017/SoccerStore');
     await _db!.open();
     return _db!;
   }

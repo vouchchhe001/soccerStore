@@ -1,5 +1,6 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:soccer_store_api/database.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   final method = context.request.method;
@@ -25,8 +26,8 @@ Future<Response> _handleGet(RequestContext context) async {
     final queryParams = context.request.uri.queryParameters;
     final orderId = queryParams['orderId'];
 
-    final filter = orderId != null ? {'orderId': orderId} : {};
-    final documents = await collection.find(filter).toList();
+    final selector = orderId != null ? where.eq('orderId', orderId) : where;
+    final documents = await collection.find(selector).toList();
 
     final payments = documents.map((doc) {
       final payment = Map<String, dynamic>.from(doc);
@@ -68,7 +69,11 @@ Future<Response> _handlePost(RequestContext context) async {
     if (orderId == null || amount == null || paymentMethod == null) {
       return Response.json(
         statusCode: 400,
-        body: {'success': false, 'message': 'Missing required fields: orderId, amount, or paymentMethod'},
+        body: {
+          'success': false,
+          'message':
+              'Missing required fields: orderId, amount, or paymentMethod',
+        },
       );
     }
 

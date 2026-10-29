@@ -8,21 +8,36 @@ Future<Response> onRequest(RequestContext context) async {
   final method = context.request.method;
 
   if (method != HttpMethod.get) {
-    return Response.json(statusCode: 405, body: {'success': false, 'message': 'Method not allowed'});
+    return Response.json(
+      statusCode: 405,
+      body: {'success': false, 'message': 'Method not allowed'},
+    );
   }
 
   if (path == '/orderDetails') {
-    return Response.json(body: storeProvider.orderDetails.map((od) => od.toJson()).toList());
+    return Response.json(
+      body: storeProvider.orderDetails.map((od) => od.toJson()).toList(),
+    );
   }
   if (path.startsWith('/orderDetails/')) {
     try {
       final id = path.split('/').last;
-      final detail = storeProvider.getById(storeProvider.orderDetails, id, (od) => od.id);
+      final detail = storeProvider.getById(
+        storeProvider.orderDetails,
+        id,
+        (od) => od.id,
+      );
       return Response.json(body: detail.toJson());
     } catch (_) {
-      return Response.json(statusCode: 404, body: {'success': false, 'message': 'Order detail not found'});
+      return Response.json(
+        statusCode: 404,
+        body: {'success': false, 'message': 'Order detail not found'},
+      );
     }
   }
 
-  return Response.json(statusCode: 404, body: {'success': false, 'message': 'Not Found'});
+  return Response.json(
+    statusCode: 404,
+    body: {'success': false, 'message': 'Not Found'},
+  );
 }
